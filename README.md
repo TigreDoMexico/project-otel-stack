@@ -6,15 +6,19 @@
 - Grafana
 - Jaeger
 - Prometheus
+- OTel Collector
 
 ## How to use it
 After starting all containers with `docker compose up -d`, the technologies will be accessible at the following URLs:
 - Grafana: http://127.0.0.1:13654 (username: admin, password: admin)
 - Prometheus: http://127.0.0.1:19876
 - Jaeger: http://127.0.0.1:16686
+- OTel Collector: http://localhost:4317
 
-To use Prometheus, you need to set all API endpoints in the prometheus.yml file before starting the container. Prometheus requires the `/metrics` endpoint on each API to gather the data necessary for the metric dashboard.
+Everything begins with the OTel Collector. It is responsible for gathering all API data related to logs, metrics, and traces, and directing this information to the appropriate services (Prometheus and Jaeger). To use the collector, each API must be configured to point to the URL `http://localhost:4317`.
 
-To use Jaeger, you need to configure the trace URL in each API. The Jaeger trace URL is `http://localhost:4317`.
+Prometheus requires the `/metrics` endpoint on each API to collect the data needed for the metrics dashboard.
 
-To use Grafana, after logging in, you need to create a connection to Prometheus. To do this, go to the side menu > Connections > Add Connection, choose Prometheus, enter the URL `http://host.docker.internal:19876`, and set the HTTP method to GET.
+Jaeger collects all traces sent by the OTel Collector
+
+To use Grafana, after logging in, you need to create a connection to Prometheus. To do this, go to *Side Menu > Connections > Add Connection,* choose Prometheus, enter the URL `http://host.docker.internal:19876`, and set the HTTP method to GET.
